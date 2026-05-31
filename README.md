@@ -6,9 +6,28 @@
 
 ## Metodología
 ### Modelo base
-El experimento se inició con un modelo de inteligencia artificial con una red neuronal convolucional (CNN por sus siglas en inglés) que contaba con los siguientes parámetros
+Inicialmente, el experimento se llevó a cabo con un modelo base.
 
-[parámetros]
+| Parámetro | Valor |
+| --------- | ----- |
+| Learning Rate | 1x10^-4 |
+| Input shape | 75x75x3 |
+| Batch Size | 8 |
+| Número de clases | 75 |
+| Número de imágenes de entrenamiento | 4549 |
+| Número de imágenes de prueba | 1950 |
+| Optimizer | RMSprop |
+| Número de layers | 3 |
+| Número de epochs | 250 |
+
+Este modelo cuenta con cuatro layers como parte de su arquitectura. 
+| Layers |
+| ------ |
+| Flatten |
+| Dense(256, activation='reLu') |
+| Dense(75, activation='softmax') |
+
+Utiliza la fórmula de Cross Enthropy para calcular el loss en cada epoch.
 
 Los resultados obtenidos a partir del entrenamiento del modelo base fueron los siguientes:
 
@@ -29,7 +48,7 @@ El gráfico muestra un estancamiento en valores mucho más bajos a los del set d
 <img width="556" height="435" alt="téléchargement (3)" src="https://github.com/user-attachments/assets/63d3bc5d-8aa5-45c1-b01b-389ea282ac0c" />
 
 #### Interpretación del modelo base
-Este modelo tiene una arquitectura muy simple, contando con únicamente 3 layers.
+Este modelo tiene una arquitectura muy simple, contando con únicamente 4 layers.
 
 ## Conclusiones
 
