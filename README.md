@@ -105,19 +105,26 @@ El tamaño de las imágenes fue cambiado de 64x64 a 75x75, ya que el modelo pre-
 
 El valor de la tasa de aprendizaje fue cambiado a 1x10^-6, ya que con un valor menor existía una demostración clara de **overfitting*. En este caso, se mostraban picos notorios en los valores de pérdida de la validación, sumado a que la precisión en el modelo de entrenamiento fue ~80%, en validación ~65%, y en pruebas ~51%
 
-[Insertar imagen de overfitting]
+<img width="567" height="455" alt="comparison" src="https://github.com/user-attachments/assets/4db6960f-82b7-43ea-8f07-c3163ea7b72d" />
+
 
 En una de las matrices de confusión que se generaron para esta iteración se evidencia las fallas que comete el modelo al identificar las imagenes.
 
-[Insertar matriz de confusión donde se observa la falta de efectividad]
+<img width="654" height="606" alt="cm5" src="https://github.com/user-attachments/assets/630f9ef4-fe4f-4de3-bbe9-ab9186afe6ae" />
+
 
 Con una tasa de aprendizaje menor, el entrenamiento mostró menos valores inconsistentes en las pérdidas tanto de validación como de entrenamiento. Además, los valores de precisión en entrenamiento y validación mostraron una mayor similitud. Al probar el modelo, el valor estuvo acorde al correspondiente en entrenamiento y validación, mostrando entre todos valores finales de alrededor del 75%.
 
-[Insertar imagen de training vs validation vs test]
+<img width="567" height="455" alt="téléchargement (3)" src="https://github.com/user-attachments/assets/b17d9071-7dcf-43e2-8f75-c84beba9a628" />
+
 
 En las matrices de confusión generadas por el modelo, se puede observar una mayor precisión en la clasificación de mariposas.
 
-[Insertar matrices de confusión]
+<img width="703" height="654" alt="cm1" src="https://github.com/user-attachments/assets/187a10bb-6091-493e-8d0d-728b35c05f94" />
+<img width="661" height="612" alt="cm2" src="https://github.com/user-attachments/assets/b01b038e-8e51-4aa9-a381-c24d76fc466e" />
+<img width="697" height="648" alt="cm3" src="https://github.com/user-attachments/assets/f64367c8-c8fe-4815-83f1-db21ed1026ab" />
+<img width="634" height="586" alt="cm4" src="https://github.com/user-attachments/assets/c4a0f024-6f92-49f8-917a-e931e5506318" />
+<img width="654" height="606" alt="cm5" src="https://github.com/user-attachments/assets/9f84d295-fb60-4ce2-9fb2-5c85a3967d6a" />
 
 ## Conclusiones
 
