@@ -19,6 +19,9 @@ Este set contiene un set de entrenamiento y uno de pruebas. Existen dos CSV dent
 
 Es por ello que se decidió dividir el set originalmente destinado al entrenamiento en un set de entrenamiento, validación y pruebas. Del 70% dedicado al entrenamiento, se toma el 30% como el set de validación, el cual servirá como guía para saber si el modelo está siendo entrenado de forma correcta.
 
+### Métricas
+Este reporte utiliza sobre todo la medida de **Accuracy**, a la cual se le referirá por "precisión" por su traducción al español. En el estado del arte, se muestran valores por encima del 90%. Debido a la cantidad de clases en el conjunto de datos seleccionado, el objetivo con este experimento es llegar a un valor de (o cercano a) ~80% de precisión.
+
 ## Metodología
 
 Para asegurar una mayor precisión en el modelo y una mayor cantidad de datos sobre los cuales se puede basar, se implementó la augmentación de datos. Dentro de la misma, se aplicaron los siguientes parámetros:
