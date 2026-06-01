@@ -103,7 +103,11 @@ InceptionV3 tiene una arquitectura que consiste de 48 capas de profundidad. En e
 
 El tamaño de las imágenes fue cambiado de 64x64 a 75x75, ya que el modelo pre-entrenado InceptionV3 exige un mínimo de 75x75 como resolución. 
 
+El batch size se toma basado en el que se seleccionó en los experimentos detallados dentro de los artículos científicos.
+
 El valor de la tasa de aprendizaje fue cambiado a 1x10^-6, ya que con un valor menor existía una demostración clara de **overfitting*. En este caso, se mostraban picos notorios en los valores de pérdida de la validación, sumado a que la precisión en el modelo de entrenamiento fue ~80%, en validación ~65%, y en pruebas ~51%
+
+Si bien en los artículos se utilizó el optimizador Adam, se notó que utilizando RMSprop no se presentó overfitting o pérdida excesiva en el conjunto de validación.
 
 <img width="567" height="455" alt="comparison" src="https://github.com/user-attachments/assets/4db6960f-82b7-43ea-8f07-c3163ea7b72d" />
 
