@@ -2,16 +2,45 @@
 
 ## Abstract
 
+El entrenamiento de modelos de Machine Learning para un conjunto de datos de identificación de especies de mariposa implica el conocimiento y la utilización de los parámetros e hiperparámetros necesarios para lograr su precisión. Es por ello que este reporte detalla la metodología utilizada para llegar a una mejora en el modelo con base en conocimientos adquiridos a partir de dos artículos científicos. Se emplea la augmentación de imágenes, la división de un conjunto de datos en sets de entrenamiento, validación y pruebas, y se emplea un modelo pre-entrenado con el fin de lograr una mayor precisión en el modelo que se desea entrenar (cross-training). El modelo pasó de presentar señales de underfitting (precisión del 55% en entrenamiento y 45% en validación), a un estado óptimo (~75% precisión en entrenamiento, validación y pruebas).
+
 ## Introducción
 
+La clasificación de imágenes es esencial en el marco del Machine Learning. Se han llevado a cabo varios experimentos y metodologías para intentar lograr una mayor precisión en la misma, dentro de las cuales la Red Neuronal Convolucional (CNN por sus siglas en inglés) ha mostrado ser la más efectiva. 
+
+El objetivo de este artículo es mostrar cómo los parámetros, hiperparámetros y capas en un modelo que emplea CNN pueden afectar significativamente el rendimiento y la precisión del mismo.
+
+Se toma en consideración un dataset obtenido desde kaggle llamado **Butterfly Image Classification**. Este set contiene varias imágenes de mariposas que pueden ser clasificadas en 75 clases diferentes. 
+
+[Insertar imagen de distribución de clases]
+
+Este set contiene un set de entrenamiento y uno de pruebas. Existen dos CSV dentro del dataset; train.csv y test.csv. Sin embargo, el CSV de test no contiene las clasificaciones correctas de las imágenes, por lo que no es viable utilizarlo como set para probar que el modelo sea efectivo.
+
+Es por ello que se decidió dividir el set originalmente destinado al entrenamiento en un set de entrenamiento, validación y pruebas. Las fuentes consultadas indicaron una división del 80% en entrenamiento, y el 20% en pruebas. Del 80% dedicado al entrenamiento, se toma el 20% como el set de validación, el cual servirá como guía para saber si el modelo está siendo entrenado de forma correcta.
+
+
 ## Metodología
+
+Para asegurar una mayor precisión en el modelo y una mayor cantidad de datos sobre los cuales se puede basar, se implementó la augmentación de datos. Dentro de la misma, se aplicaron los siguientes parámetros:
+
+| Parámetro | Valor |
+| --------- | ----- |
+| Rotation Range | 10 |
+| Width Shift Range | 0.2 |
+| Height Shift Range | 0.2 |
+| Shear Range | 0.3 |
+| Zoom Range | 0.3 |
+| Horizontal flip | True |
+
+Al ser un conjunto de datos que cuenta con 75 diferentes clases, se decidió implementar cinco diferentes matrices de confusión en los resultados. En cada matriz, se observará la confusión entre 15 diferentes clases (para observar claramente los resultados).
+
 ### Modelo base
-Inicialmente, el experimento se llevó a cabo con un modelo base.
+Inicialmente, el experimento se llevó a cabo con un modelo básico sin mejoras implementadas.
 
 | Parámetro | Valor |
 | --------- | ----- |
 | Learning Rate | 1x10^-4 |
-| Input shape | 75x75x3 |
+| Input shape | 64x64x3 |
 | Batch Size | 8 |
 | Número de clases | 75 |
 | Número de imágenes de entrenamiento | 4549 |
@@ -21,11 +50,15 @@ Inicialmente, el experimento se llevó a cabo con un modelo base.
 | Número de epochs | 250 |
 
 Este modelo cuenta con cuatro layers como parte de su arquitectura. 
+
 | Layers |
 | ------ |
+| Conv2D(activation='reLu') |
 | Flatten |
 | Dense(256, activation='reLu') |
 | Dense(75, activation='softmax') |
+
+Además, el tamaño de las imagenes fue cambiado de **224x224** a **64x64**, ya que un tamaño reducido beneficia la velocidad y precisión del modelo.
 
 Utiliza la fórmula de Cross Enthropy para calcular el loss en cada epoch.
 
@@ -48,8 +81,48 @@ El gráfico muestra un estancamiento en valores mucho más bajos a los del set d
 <img width="556" height="435" alt="téléchargement (3)" src="https://github.com/user-attachments/assets/63d3bc5d-8aa5-45c1-b01b-389ea282ac0c" />
 
 #### Interpretación del modelo base
-Este modelo tiene una arquitectura muy simple, contando con únicamente 4 layers.
+Este modelo tiene una arquitectura muy simple, contando con únicamente 4 layers. Es por ello que la cantidad de parámetros que toma el modelo de entrenamiento no es suficiente para entrenarlo lo suficiente para reconocer con claridad el tipo de mariposa a partir de una foto. Al ser un modelo con underfitting, se puede inferir que el valor de precisión al probar el modelo será inferior a lo esperado.
+
+### Modelo mejorado
+
+Posterior a la prueba del modelo base, se llevaron a cabo diferentes mejoras para lograr un mejor entrenamiento. Con base en los artículos científicos consultados, se tomó la decisión de implementar el modelo pre-entrenado **InceptionV3**, que es viene del modele GoogLeNet. En un artículo donde se emplearon 120 imágenes de mariposas para clasificarlas en 4 diferentes especies, se notó que el modelo CNN GoogLeNet tenía un mejor rendimiento que otros modelos pre-entrenados tales como AlexNet. Se denotó que GoogLeNet logra una alta precisión detectando patrones en las diferentes especies de hojas, logrando reconocer 36 tipos de hojas.
+
+InceptionV3 tiene una arquitectura que consiste de 48 capas de profundidad. En este modelo, los parámetros utilizados fueron los siguientes:
+
+| Parámetro | Valor |
+| --------- | ----- |
+| Tasa de Aprendizaje | 1x10^-6 |
+| Input shape | 75x75x3 |
+| Batch Size | 8 |
+| Número de clases | 75 |
+| Número de imágenes de entrenamiento | 4549 |
+| Número de imágenes de prueba | 1950 |
+| Optimizer | RMSprop |
+| Número de layers | 48 (InceptionV3) |
+| Número de epochs | 120 |
+
+El tamaño de las imágenes fue cambiado de 64x64 a 75x75, ya que el modelo pre-entrenado InceptionV3 exige un mínimo de 75x75 como resolución. 
+
+El valor de la tasa de aprendizaje fue cambiado a 1x10^-6, ya que con un valor menor existía una demostración clara de **overfitting*. En este caso, se mostraban picos notorios en los valores de pérdida de la validación, sumado a que la precisión en el modelo de entrenamiento fue ~80%, en validación ~65%, y en pruebas ~51%
+
+[Insertar imagen de overfitting]
+
+En una de las matrices de confusión que se generaron para esta iteración se evidencia las fallas que comete el modelo al identificar las imagenes.
+
+[Insertar matriz de confusión donde se observa la falta de efectividad]
+
+Con una tasa de aprendizaje menor, el entrenamiento mostró menos valores inconsistentes en las pérdidas tanto de validación como de entrenamiento. Además, los valores de precisión en entrenamiento y validación mostraron una mayor similitud. Al probar el modelo, el valor estuvo acorde al correspondiente en entrenamiento y validación, mostrando entre todos valores finales de alrededor del 75%.
+
+[Insertar imagen de training vs validation vs test]
+
+En las matrices de confusión generadas por el modelo, se puede observar una mayor precisión en la clasificación de mariposas.
+
+[Insertar matrices de confusión]
 
 ## Conclusiones
 
+El experimento muestra resultados satisfactorios y de mejora, ya que se puede observar cómo un modelo cambia de underfitting a overfitting, para finalmente dar resultados coherentes entre los conjuntos de entrenamiento, validación y pruebas. Es complicado que el modelo llegue a un resultado completamente perfecto (100% de precisión) debido a la cantidad de clases que existen en el set de datos. Pese a esto, las mejoras presentadas a partir de las decisiones tomadas muestran resultados importantes, los cuales han sido demostrados con gráficas, mapas y métricas.
+
 ## Referencias
+D. P. Mishra, T. K. Tripathy, and S. Chakraborty, CNN for Butterfly Classification, vol. 15. 2018, pp. 200–205. doi: 10.1109/icrieece44171.2018.9008419.
+N. N. K. Arzar, N. Sabri, N. F. M. Johari, A. A. Shari, M. R. M. Noordin, and S. Ibrahim, Butterfly Species Identification Using Convolutional Neural Network (CNN). 2019, pp. 221–224. doi: 10.1109/i2cacis.2019.8825031.
