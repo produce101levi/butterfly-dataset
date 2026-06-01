@@ -139,4 +139,5 @@ El experimento muestra resultados satisfactorios y de mejora, ya que se puede ob
 
 ## Referencias
 D. P. Mishra, T. K. Tripathy, and S. Chakraborty, CNN for Butterfly Classification, vol. 15. 2018, pp. 200–205. doi: 10.1109/icrieece44171.2018.9008419.
+
 N. N. K. Arzar, N. Sabri, N. F. M. Johari, A. A. Shari, M. R. M. Noordin, and S. Ibrahim, Butterfly Species Identification Using Convolutional Neural Network (CNN). 2019, pp. 221–224. doi: 10.1109/i2cacis.2019.8825031.
