@@ -16,8 +16,7 @@ Se toma en consideración un dataset obtenido desde kaggle llamado **Butterfly I
 
 Este set contiene un set de entrenamiento y uno de pruebas. Existen dos CSV dentro del dataset; train.csv y test.csv. Sin embargo, el CSV de test no contiene las clasificaciones correctas de las imágenes, por lo que no es viable utilizarlo como set para probar que el modelo sea efectivo.
 
-Es por ello que se decidió dividir el set originalmente destinado al entrenamiento en un set de entrenamiento, validación y pruebas. Las fuentes consultadas indicaron una división del 80% en entrenamiento, y el 20% en pruebas. Del 80% dedicado al entrenamiento, se toma el 20% como el set de validación, el cual servirá como guía para saber si el modelo está siendo entrenado de forma correcta.
-
+Es por ello que se decidió dividir el set originalmente destinado al entrenamiento en un set de entrenamiento, validación y pruebas. Del 70% dedicado al entrenamiento, se toma el 30% como el set de validación, el cual servirá como guía para saber si el modelo está siendo entrenado de forma correcta.
 
 ## Metodología
 
