@@ -12,7 +12,8 @@ El objetivo de este artículo es mostrar cómo los parámetros, hiperparámetros
 
 Se toma en consideración un dataset obtenido desde kaggle llamado **Butterfly Image Classification**. Este set contiene varias imágenes de mariposas que pueden ser clasificadas en 75 clases diferentes. 
 
-[Insertar imagen de distribución de clases]
+<img width="1189" height="1790" alt="distributionClasses" src="https://github.com/user-attachments/assets/fa3f5b38-3328-4c51-8f94-3a52a64c1fb5" />
+
 
 Este set contiene un set de entrenamiento y uno de pruebas. Existen dos CSV dentro del dataset; train.csv y test.csv. Sin embargo, el CSV de test no contiene las clasificaciones correctas de las imágenes, por lo que no es viable utilizarlo como set para probar que el modelo sea efectivo.
 
