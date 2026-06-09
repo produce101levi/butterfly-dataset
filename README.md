@@ -2,20 +2,19 @@
 
 ## Abstract
 
-El entrenamiento de modelos de Machine Learning para un conjunto de datos de identificación de especies de mariposa implica el conocimiento y la utilización de los parámetros e hiperparámetros necesarios para lograr su precisión. Es por ello que este reporte detalla la metodología utilizada para llegar a una mejora en el modelo con base en conocimientos adquiridos a partir de dos artículos científicos. Se emplea la augmentación de imágenes, la división de un conjunto de datos en sets de entrenamiento, validación y pruebas, y se emplea un modelo pre-entrenado con el fin de lograr una mayor precisión en el modelo que se desea entrenar (cross-training). El modelo pasó de presentar señales de underfitting (precisión del 55% en entrenamiento y 45% en validación), a un estado óptimo (~75% precisión en entrenamiento, validación y pruebas).
+El entrenamiento de modelos de Machine Learning para un conjunto de datos de identificación de especies de mariposa implica el conocimiento y la utilización de los parámetros e hiperparámetros necesarios para lograr su precisión. Es por ello que el presente reporte detalla la metodología utilizada para llegar a una mejora en el modelo con base en conocimientos adquiridos a partir de dos artículos científicos. Se emplea la augmentación de imágenes, la división de un conjunto de datos en sets de entrenamiento, validación y pruebas, y se emplea un modelo pre-entrenado con el fin de lograr una mayor precisión en el modelo que se desea entrenar (transfer learning). El modelo pasó de presentar señales de underfitting (precisión del 55% en entrenamiento y 45% en validación), a un estado óptimo (~80% de precisión en entrenamiento, validación y pruebas).
 
 ## Introducción
 
-La clasificación de imágenes es esencial en el marco del Machine Learning. Se han llevado a cabo varios experimentos y metodologías para intentar lograr una mayor precisión en la misma, dentro de las cuales la Red Neuronal Convolucional (CNN por sus siglas en inglés) ha mostrado ser la más efectiva. 
+La clasificación de imágenes es una de las tareas más relevantes en el campo del Machine Learning. Se han llevado a cabo varios experimentos y metodologías para intentar lograr una mayor precisión en la misma, dentro de las cuales la Red Neuronal Convolucional (CNN, por sus siglas en inglés) ha mostrado ser la más efectiva.
 
 El objetivo de este artículo es mostrar cómo los parámetros, hiperparámetros y capas en un modelo que emplea CNN pueden afectar significativamente el rendimiento y la precisión del mismo.
 
-Se toma en consideración un dataset obtenido desde kaggle llamado **Butterfly Image Classification**. Este set contiene varias imágenes de mariposas que pueden ser clasificadas en 75 clases diferentes. 
+Se toma en consideración un dataset obtenido desde Kaggle llamado **Butterfly Image Classification**. Este set contiene varias imágenes de mariposas que pueden ser clasificadas en 75 clases diferentes.
 
 <img width="1189" height="1790" alt="distributionClasses" src="https://github.com/user-attachments/assets/fa3f5b38-3328-4c51-8f94-3a52a64c1fb5" />
 
-
-Este set contiene un set de entrenamiento y uno de pruebas. Existen dos CSV dentro del dataset; train.csv y test.csv. Sin embargo, el CSV de test no contiene las clasificaciones correctas de las imágenes, por lo que no es viable utilizarlo como set para probar que el modelo sea efectivo.
+Este set contiene un set de entrenamiento y uno de pruebas. Existen dos CSV dentro del dataset: train.csv y test.csv. Sin embargo, el CSV de pruebas no contiene las clasificaciones correctas de las imágenes, por lo que no es viable utilizarlo como set para probar la efectividad del modelo.
 
 Es por ello que se decidió dividir el set originalmente destinado al entrenamiento en un set de entrenamiento, validación y pruebas. Del 70% dedicado al entrenamiento, se toma el 30% como el set de validación, el cual servirá como guía para saber si el modelo está siendo entrenado de forma correcta.
 
@@ -33,26 +32,26 @@ Para asegurar una mayor precisión en el modelo y una mayor cantidad de datos so
 | Height Shift Range | 0.2 |
 | Shear Range | 0.3 |
 | Zoom Range | 0.3 |
-| Horizontal flip | True |
+| Horizontal Flip | True |
 
 Al ser un conjunto de datos que cuenta con 75 diferentes clases, se decidió implementar cinco diferentes matrices de confusión en los resultados. En cada matriz, se observará la confusión entre 15 diferentes clases (para observar claramente los resultados).
 
-### Modelo base
+### Modelo Base
 Inicialmente, el experimento se llevó a cabo con un modelo básico sin mejoras implementadas.
 
 | Parámetro | Valor |
 | --------- | ----- |
 | Learning Rate | 1x10^-4 |
-| Input shape | 64x64x3 |
+| Input Shape | 64x64x3 |
 | Batch Size | 8 |
 | Número de clases | 75 |
 | Número de imágenes de entrenamiento | 4549 |
 | Número de imágenes de prueba | 1950 |
 | Optimizer | RMSprop |
-| Número de layers | 3 |
+| Número de layers | 4 |
 | Número de epochs | 250 |
 
-Este modelo cuenta con cuatro layers como parte de su arquitectura. 
+Este modelo cuenta con cuatro layers como parte de su arquitectura.
 
 | Layers |
 | ------ |
@@ -61,73 +60,75 @@ Este modelo cuenta con cuatro layers como parte de su arquitectura.
 | Dense(256, activation='reLu') |
 | Dense(75, activation='softmax') |
 
-Además, el tamaño de las imagenes fue cambiado de **224x224** a **64x64**, ya que se buscó obtener una mayor velocidad en entrenamiento del modelo.
+Además, el tamaño de las imágenes fue cambiado de **224x224** a **64x64**, ya que se buscó obtener una mayor velocidad en el entrenamiento del modelo.
 
-Utiliza la fórmula de Cross Enthropy para calcular el loss en cada epoch.
+Utiliza la fórmula de Cross Entropy para calcular el loss en cada epoch.
 
 Los resultados obtenidos a partir del entrenamiento del modelo base fueron los siguientes:
 
-#### Gráfico representando la evolución del valor accuracy en el set de entrenamiento
-<img width="553" height="446" alt="Capture d’écran 2026-06-08 à 1 30 28 PM" src="https://github.com/user-attachments/assets/9a244d06-308c-4250-92da-8f7367e4cbb2" />
+#### Figura 1: Evolución del valor accuracy en el set de entrenamiento
+<img width="553" height="446" alt="Capture d'écran 2026-06-08 à 1 30 28 PM" src="https://github.com/user-attachments/assets/9a244d06-308c-4250-92da-8f7367e4cbb2" />
 
-En este gráfico se observa un claro signo de **underfitting**, en donde el porcentaje precisión del modelo se estanca en aproximadamente un 55% tras 250 iteraciones. Esto indica que, en el conjunto de datos correspondiente a las fotos de entrenamiento, alrededor del 55% de las mariposas son clasificadas correctamente. 
+En este gráfico se observa un claro signo de **underfitting**, en donde el porcentaje de precisión del modelo se estanca en aproximadamente un 55% tras 250 iteraciones. Esto indica que, en el conjunto de datos correspondiente a las fotos de entrenamiento, alrededor del 55% de las mariposas son clasificadas correctamente.
 
-#### Gráfico representando la evolución del valor loss en el set de entrenamiento
-<img width="547" height="435" alt="téléchargement (1)" src="https://github.com/user-attachments/assets/fa408417-ad5b-4e18-8aaa-0eb6337c6096" />
+#### Figura 2: Evolución del valor loss en el set de entrenamiento
+<img width="547" height="435" alt="téléchargement (1)" src="https://github.com/user-attachments/assets/fa408417-ad5b-4e18-8aaa-0eb6337c6096" />
 
-#### Gráfico representando la evolución del valor accuracy en el set de validación
-<img width="559" height="445" alt="Capture d’écran 2026-06-08 à 1 30 32 PM" src="https://github.com/user-attachments/assets/edcc3145-dea0-4f99-8a4c-0c776b4c7f95" />
+#### Figura 3: Evolución del valor accuracy en el set de validación
+<img width="559" height="445" alt="Capture d'écran 2026-06-08 à 1 30 32 PM" src="https://github.com/user-attachments/assets/edcc3145-dea0-4f99-8a4c-0c776b4c7f95" />
 
+El gráfico muestra un estancamiento en valores mucho más bajos a los del set de entrenamiento, quedando en alrededor del 42.5%. Tras 250 iteraciones se indica que, en el set de validación, únicamente el 42.5% de las mariposas (en promedio) son clasificadas correctamente.
 
-El gráfico muestra un estancamiento en valores mucho más bajos a los del set de entrenamiento, quedando en alrededor del 42.5%. Tras 250 iteraciones se indica que, en el set de validaciones, únicamente el 42.5% de las mariposas (en promedio) son clasificadas correctamente.
-
-#### Gráfico representando la evolución del valor loss en el set de validación
-<img width="556" height="435" alt="téléchargement (3)" src="https://github.com/user-attachments/assets/63d3bc5d-8aa5-45c1-b01b-389ea282ac0c" />
+#### Figura 4: Evolución del valor loss en el set de validación
+<img width="556" height="435" alt="téléchargement (3)" src="https://github.com/user-attachments/assets/63d3bc5d-8aa5-45c1-b01b-389ea282ac0c" />
 
 #### Interpretación del modelo base
-Este modelo tiene una arquitectura muy simple, contando con únicamente 4 layers. Es por ello que la cantidad de parámetros que toma el modelo de entrenamiento no es suficiente para entrenarlo lo suficiente para reconocer con claridad el tipo de mariposa a partir de una foto. Al ser un modelo con underfitting, se puede inferir que el valor de precisión al probar el modelo será inferior a lo esperado.
+Este modelo tiene una arquitectura muy simple, contando con únicamente 4 layers. Es por ello que la cantidad de parámetros que toma el modelo de entrenamiento no es suficiente para reconocer con claridad el tipo de mariposa a partir de una foto. Al ser un modelo con underfitting, se puede inferir que el valor de precisión al probar el modelo será inferior a lo esperado.
 
 ### Iteración 2
 
-Posterior a la prueba del modelo base, se llevaron a cabo diferentes mejoras para lograr un mejor entrenamiento. Con base en los artículos científicos consultados, se tomó la decisión de implementar el modelo pre-entrenado **InceptionV3**, que es viene del modele GoogLeNet. En un artículo donde se emplearon 120 imágenes de mariposas para clasificarlas en 4 diferentes especies, se notó que el modelo CNN GoogLeNet tenía un mejor rendimiento que otros modelos pre-entrenados tales como AlexNet. Se denotó que GoogLeNet logra una alta precisión detectando patrones en las diferentes especies de hojas, logrando reconocer 36 tipos de hojas.
+Posterior a la prueba del modelo base, se llevaron a cabo diferentes mejoras para lograr un mejor entrenamiento. Con base en los artículos científicos consultados, se tomó la decisión de implementar el modelo pre-entrenado **InceptionV3**, que proviene del modelo GoogLeNet. En un artículo donde se emplearon 120 imágenes de mariposas para clasificarlas en 4 diferentes especies, se notó que el modelo CNN GoogLeNet tenía un mejor rendimiento que otros modelos pre-entrenados tales como AlexNet.
 
 InceptionV3 tiene una arquitectura que consiste de 48 capas de profundidad. En este modelo, los parámetros utilizados fueron los siguientes:
 
 | Parámetro | Valor |
 | --------- | ----- |
 | Tasa de Aprendizaje | 1x10^-6 |
-| Input shape | 75x75x3 |
+| Input Shape | 75x75x3 |
 | Batch Size | 8 |
 | Número de clases | 75 |
 | Número de imágenes de entrenamiento | 4549 |
 | Número de imágenes de prueba | 1950 |
 | Optimizer | RMSprop |
-| Número de layers | 52 (InceptionV3 + Capas adicionales) |
+| Número de layers | 52 (InceptionV3 + capas adicionales) |
 | Número de epochs | 120 |
 
-El tamaño de las imágenes fue cambiado de 64x64 a 75x75, ya que el modelo pre-entrenado InceptionV3 exige un mínimo de 75x75 como resolución. 
+El tamaño de las imágenes fue cambiado de 64x64 a 75x75, ya que el modelo pre-entrenado InceptionV3 exige un mínimo de 75x75 como resolución.
 
-El batch size se toma basado en el que se seleccionó en los experimentos detallados dentro de los artículos científicos.
+El batch size se tomó con base en el seleccionado en los experimentos detallados dentro de los artículos científicos.
 
-El valor de la tasa de aprendizaje fue cambiado a 1x10^-6, ya que con un valor menor existía una demostración clara de **overfitting*. En este caso, se mostraban picos notorios en los valores de pérdida de la validación, sumado a que la precisión en el modelo de entrenamiento fue ~80%, en validación ~65%, y en pruebas ~51%
+El valor de la tasa de aprendizaje fue cambiado a 1x10^-6, ya que con un valor mayor existía una demostración clara de **overfitting**. En este caso, se mostraban picos notorios en los valores de pérdida de la validación, sumado a que la precisión en el modelo de entrenamiento fue ~80%, en validación ~65%, y en pruebas ~51%.
 
-Si bien en los artículos se utilizó el optimizador Adam, se notó que utilizando RMSprop no se presentó overfitting o pérdida excesiva en el conjunto de validación.
+Si bien en los artículos se utilizó el optimizador Adam, se notó que utilizando RMSprop no se presentó overfitting ni pérdida excesiva en el conjunto de validación.
 
+#### Figura 5: Comparación accuracy — Iteración 2
 <img width="567" height="455" alt="comparison" src="https://github.com/user-attachments/assets/4db6960f-82b7-43ea-8f07-c3163ea7b72d" />
 
+En una de las matrices de confusión generadas para esta iteración se evidencian las fallas que comete el modelo al identificar las imágenes.
 
-En una de las matrices de confusión que se generaron para esta iteración se evidencian las fallas que comete el modelo al identificar las imagenes.
-
+#### Figura 6: Matriz de confusión — Iteración 2
 <img width="654" height="606" alt="cm5" src="https://github.com/user-attachments/assets/630f9ef4-fe4f-4de3-bbe9-ab9186afe6ae" />
 
 ### Iteración 3
 
 Con una tasa de aprendizaje menor, el entrenamiento mostró menos valores inconsistentes en las pérdidas tanto de validación como de entrenamiento. Además, los valores de precisión en entrenamiento y validación mostraron una mayor similitud. Al probar el modelo, el valor estuvo acorde al correspondiente en entrenamiento y validación, mostrando entre todos valores finales de alrededor del 75%.
 
-<img width="567" height="455" alt="téléchargement (3)" src="https://github.com/user-attachments/assets/b17d9071-7dcf-43e2-8f75-c84beba9a628" />
+#### Figura 7: Comparación accuracy — Iteración 3
+<img width="567" height="455" alt="téléchargement (3)" src="https://github.com/user-attachments/assets/b17d9071-7dcf-43e2-8f75-c84beba9a628" />
 
 En las matrices de confusión generadas por el modelo, se puede observar una mayor precisión en la clasificación de mariposas.
 
+#### Figuras 8–12: Matrices de confusión — Iteración 3
 <img width="703" height="654" alt="cm1" src="https://github.com/user-attachments/assets/187a10bb-6091-493e-8d0d-728b35c05f94" />
 <img width="661" height="612" alt="cm2" src="https://github.com/user-attachments/assets/b01b038e-8e51-4aa9-a381-c24d76fc466e" />
 <img width="697" height="648" alt="cm3" src="https://github.com/user-attachments/assets/f64367c8-c8fe-4815-83f1-db21ed1026ab" />
@@ -136,34 +137,39 @@ En las matrices de confusión generadas por el modelo, se puede observar una may
 
 ### Iteración 4
 
-El modelo anterior llegó a un valor de accuracy de aproximadamente 75%. Para llegar a un valor más alto, se hicieron algunas modificaciones. 
+El modelo anterior llegó a un valor de accuracy de aproximadamente 75%. Para alcanzar un valor más alto, se realizaron algunas modificaciones.
 
-La modificación más importante involucró el tamaño de la imagen. Debido a que el modelo pre-entrenado estaba hecho para tomar en consideración imágenes de mayor tamaño, aumentar su tamaño de 75x75 a 299x299 permitiría al modelo entrenarse en base a imágenes con un mayor detalle.
+La modificación más importante involucró el tamaño de la imagen. Dado que el modelo pre-entrenado fue diseñado para procesar imágenes de mayor resolución, aumentar su tamaño de 75x75 a 299x299 permitiría al modelo entrenarse en base a imágenes con un mayor nivel de detalle.
 
-Además, se implementó la función **ReduceLROnPlateau**, la cual reduce el valor de la tasa de entrenamiento al notar que un modelo no avanza respecto a sus valores de accuracy tanto en entrenamiento como en validación.
+Además, se implementó la función **ReduceLROnPlateau**, la cual reduce el valor de la tasa de aprendizaje al detectar que el modelo no presenta mejoras en sus valores de accuracy tanto en entrenamiento como en validación.
 
-El último cambio fue implementar un valor de tasa de aprendizaje más alto, cambiando de 1x10^-6 a 1x10^-4. El uso de la función Reduce LR On Plateau hará modificaciones pertinentes a éste durante el entrenamiento si se detecta la necesidad.
+El último cambio fue implementar un valor de tasa de aprendizaje más alto, cambiando de 1x10^-6 a 1x10^-4. El uso de la función ReduceLROnPlateau realizará las modificaciones pertinentes a este valor durante el entrenamiento si se detecta la necesidad.
 
 | Parámetro | Valor |
 | --------- | ----- |
 | Tasa de Aprendizaje | 1x10^-4 |
-| Input shape | 299x299x3 |
+| Input Shape | 299x299x3 |
 | Batch Size | 8 |
 | Número de clases | 75 |
 | Número de imágenes de entrenamiento | 4549 |
 | Número de imágenes de prueba | 1950 |
 | Optimizer | RMSprop |
-| Número de layers | 52 (InceptionV3 + Capas adicionales) |
+| Número de layers | 52 (InceptionV3 + capas adicionales) |
 | Número de epochs | 40 |
 
-Con estos cambios, el modelo llegó a una eficiencia del 80% en los valores de prueba.
+Con estos cambios, el modelo llegó a una precisión del 80% en los valores de prueba.
 
+#### Figura 13: Comparación accuracy — Iteración 4
 <img width="567" height="455" alt="acc_comparison" src="https://github.com/user-attachments/assets/c09e782e-9993-4289-b582-80e5ec123f6b" />
 
-Incluso, se muestra una mayor consistencia con los valores de LOSS tanto en entrenamiento como en validación.
+Asimismo, se muestra una mayor consistencia en los valores de loss tanto en entrenamiento como en validación.
+
+#### Figura 14: Comparación loss — Iteración 4
 <img width="567" height="455" alt="loss_compare" src="https://github.com/user-attachments/assets/e2415da3-f802-4693-a3a4-76e5325c0404" />
 
-Las matrices de confusión muestran un menor margen de error, mostrando los siguientes datos:
+Las matrices de confusión muestran un menor margen de error:
+
+#### Figuras 15–19: Matrices de confusión — Iteración 4
 <img width="703" height="654" alt="cm1" src="https://github.com/user-attachments/assets/56954106-1f05-4385-8459-d5c5ef07e75b" />
 <img width="661" height="612" alt="cm2" src="https://github.com/user-attachments/assets/40d3db33-da64-405f-8083-3c29a29d7364" />
 <img width="697" height="648" alt="cm3" src="https://github.com/user-attachments/assets/90b48468-7af2-4b57-bd4b-021c29a1ff88" />
@@ -172,18 +178,18 @@ Las matrices de confusión muestran un menor margen de error, mostrando los sigu
 
 ## Resultados
 
-Comparando todos los intentos hechos, se puede generar la siguiente tabla comparativa
+Comparando todos los intentos realizados, se puede generar la siguiente tabla comparativa:
 
-| Iteración | Detalles del Modelo | Accuracy en Conjunto de datos de PRUEBAS |
+| Iteración | Detalles del Modelo | Accuracy en Conjunto de Pruebas |
 | - | - | - |
 | 1 | Modelo base | 41% |
 | 2 | Modelo con tasa de aprendizaje 1e-4, InceptionV3 e imagen 75x75 | 52% |
 | 3 | Modelo con tasa de aprendizaje 1e-6, InceptionV3 e imagen 75x75 | 74% |
-| 4 | Modelo con tada de aprendizaje dinámica, InceptionV3, imagen 299x299 y ReduceLROnPlateau | 80% |
+| 4 | Modelo con tasa de aprendizaje dinámica, InceptionV3, imagen 299x299 y ReduceLROnPlateau | 80% |
 
 ## Conclusiones
 
-El experimento muestra resultados satisfactorios y de mejora, ya que se puede observar cómo un modelo cambia de underfitting a overfitting, para finalmente dar resultados coherentes entre los conjuntos de entrenamiento, validación y pruebas. Es complicado que el modelo llegue a un resultado completamente perfecto (100% de precisión) debido a la cantidad de clases que existen en el set de datos. Pese a esto, las mejoras presentadas a partir de las decisiones tomadas muestran resultados importantes, los cuales han sido demostrados con gráficas, mapas y métricas.
+El experimento muestra resultados satisfactorios y de mejora, ya que se puede observar cómo un modelo evoluciona desde un estado de underfitting a uno de overfitting, para finalmente alcanzar resultados coherentes entre los conjuntos de entrenamiento, validación y pruebas. Es difícil que el modelo llegue a un resultado completamente perfecto (100% de precisión) debido a la cantidad de clases que existen en el set de datos. Pese a esto, las mejoras presentadas a partir de las decisiones tomadas muestran resultados importantes, los cuales han sido demostrados con gráficas, matrices de confusión y métricas.
 
 ## Referencias
 D. P. Mishra, T. K. Tripathy, and S. Chakraborty, CNN for Butterfly Classification, vol. 15. 2018, pp. 200–205. doi: 10.1109/icrieece44171.2018.9008419.
