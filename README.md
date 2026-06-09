@@ -112,6 +112,7 @@ El valor de la tasa de aprendizaje fue cambiado a 1x10^-6, ya que con un valor m
 Si bien en los artículos se utilizó el optimizador Adam, se notó que utilizando RMSprop no se presentó overfitting ni pérdida excesiva en el conjunto de validación.
 
 #### Figura 5: Comparación accuracy — Iteración 2
+Nota: Este gráfico únicamente llega hasta ~0.8 en el eje Y. Esto puede hacer que los resultados parezcan más altos de lo que realmente representan.
 <img width="567" height="455" alt="comparison" src="https://github.com/user-attachments/assets/4db6960f-82b7-43ea-8f07-c3163ea7b72d" />
 
 En una de las matrices de confusión generadas para esta iteración se evidencian las fallas que comete el modelo al identificar las imágenes.
@@ -124,6 +125,7 @@ En una de las matrices de confusión generadas para esta iteración se evidencia
 Con una tasa de aprendizaje menor, el entrenamiento mostró menos valores inconsistentes en las pérdidas tanto de validación como de entrenamiento. Además, los valores de precisión en entrenamiento y validación mostraron una mayor similitud. Al probar el modelo, el valor estuvo acorde al correspondiente en entrenamiento y validación, mostrando entre todos valores finales de alrededor del 75%.
 
 #### Figura 7: Comparación accuracy — Iteración 3
+Nota: Este gráfico únicamente llega hasta ~0.8 en el eje Y. Esto puede hacer que los resultados parezcan más altos de lo que realmente representan.
 <img width="567" height="455" alt="téléchargement (3)" src="https://github.com/user-attachments/assets/b17d9071-7dcf-43e2-8f75-c84beba9a628" />
 
 En las matrices de confusión generadas por el modelo, se puede observar una mayor precisión en la clasificación de mariposas.
@@ -190,6 +192,10 @@ Comparando todos los intentos realizados, se puede generar la siguiente tabla co
 ## Conclusiones
 
 El experimento muestra resultados satisfactorios y de mejora, ya que se puede observar cómo un modelo evoluciona desde un estado de underfitting a uno de overfitting, para finalmente alcanzar resultados coherentes entre los conjuntos de entrenamiento, validación y pruebas. Es difícil que el modelo llegue a un resultado completamente perfecto (100% de precisión) debido a la cantidad de clases que existen en el set de datos. Pese a esto, las mejoras presentadas a partir de las decisiones tomadas muestran resultados importantes, los cuales han sido demostrados con gráficas, matrices de confusión y métricas.
+
+## Correcciones realizadas
+1.- Corregir gráficos de accuracy en iteración 1 e iteración 4 para reflejar valores del 0 al 1 en lugar de 0 a n. (Los datos en iteración 2 y 3 ya no están disponibles, por lo que las gráficos no se pudieron regenerar. En su lugar, se agregó una nota explicando que el gráfico llega únicamente a un máximo de 0.8 en el eje Y)
+2.- Agregar una tabla de resultados comparando accuracy en test dependiendo del modelo.
 
 ## Referencias
 D. P. Mishra, T. K. Tripathy, and S. Chakraborty, CNN for Butterfly Classification, vol. 15. 2018, pp. 200–205. doi: 10.1109/icrieece44171.2018.9008419.
