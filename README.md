@@ -61,7 +61,7 @@ Este modelo cuenta con cuatro layers como parte de su arquitectura.
 | Dense(256, activation='reLu') |
 | Dense(75, activation='softmax') |
 
-Además, el tamaño de las imagenes fue cambiado de **224x224** a **64x64**, ya que un tamaño reducido beneficia la velocidad y precisión del modelo.
+Además, el tamaño de las imagenes fue cambiado de **224x224** a **64x64**, ya que se buscó obtener una mayor velocidad en entrenamiento del modelo.
 
 Utiliza la fórmula de Cross Enthropy para calcular el loss en cada epoch.
 
@@ -69,7 +69,6 @@ Los resultados obtenidos a partir del entrenamiento del modelo base fueron los s
 
 #### Gráfico representando la evolución del valor accuracy en el set de entrenamiento
 <img width="553" height="446" alt="Capture d’écran 2026-06-08 à 1 30 28 PM" src="https://github.com/user-attachments/assets/9a244d06-308c-4250-92da-8f7367e4cbb2" />
-
 
 En este gráfico se observa un claro signo de **underfitting**, en donde el porcentaje precisión del modelo se estanca en aproximadamente un 55% tras 250 iteraciones. Esto indica que, en el conjunto de datos correspondiente a las fotos de entrenamiento, alrededor del 55% de las mariposas son clasificadas correctamente. 
 
@@ -121,6 +120,8 @@ En una de las matrices de confusión que se generaron para esta iteración se ev
 
 <img width="654" height="606" alt="cm5" src="https://github.com/user-attachments/assets/630f9ef4-fe4f-4de3-bbe9-ab9186afe6ae" />
 
+### Iteración 3
+
 Con una tasa de aprendizaje menor, el entrenamiento mostró menos valores inconsistentes en las pérdidas tanto de validación como de entrenamiento. Además, los valores de precisión en entrenamiento y validación mostraron una mayor similitud. Al probar el modelo, el valor estuvo acorde al correspondiente en entrenamiento y validación, mostrando entre todos valores finales de alrededor del 75%.
 
 <img width="567" height="455" alt="téléchargement (3)" src="https://github.com/user-attachments/assets/b17d9071-7dcf-43e2-8f75-c84beba9a628" />
@@ -133,7 +134,7 @@ En las matrices de confusión generadas por el modelo, se puede observar una may
 <img width="634" height="586" alt="cm4" src="https://github.com/user-attachments/assets/c4a0f024-6f92-49f8-917a-e931e5506318" />
 <img width="654" height="606" alt="cm5" src="https://github.com/user-attachments/assets/9f84d295-fb60-4ce2-9fb2-5c85a3967d6a" />
 
-### Iteración 3
+### Iteración 4
 
 El modelo anterior llegó a un valor de accuracy de aproximadamente 75%. Para llegar a un valor más alto, se hicieron algunas modificaciones. 
 
@@ -168,6 +169,17 @@ Las matrices de confusión muestran un menor margen de error, mostrando los sigu
 <img width="697" height="648" alt="cm3" src="https://github.com/user-attachments/assets/90b48468-7af2-4b57-bd4b-021c29a1ff88" />
 <img width="634" height="586" alt="cm4" src="https://github.com/user-attachments/assets/f87125a7-1f05-466d-9a97-d5ddb99ef340" />
 <img width="654" height="606" alt="cm5" src="https://github.com/user-attachments/assets/ab86e596-f93f-4214-bcc0-99efaf2b6950" />
+
+## Resultados
+
+Comparando todos los intentos hechos, se puede generar la siguiente tabla comparativa
+
+| Iteración | Detalles del Modelo | Accuracy en Conjunto de datos de PRUEBAS |
+| - | - | - |
+| 1 | Modelo base | 41% |
+| 2 | Modelo con tasa de aprendizaje 1e-4, InceptionV3 e imagen 75x75 | 52% |
+| 3 | Modelo con tasa de aprendizaje 1e-6, InceptionV3 e imagen 75x75 | 74% |
+| 4 | Modelo con tada de aprendizaje dinámica, InceptionV3, imagen 299x299 y ReduceLROnPlateau | 80% |
 
 ## Conclusiones
 
