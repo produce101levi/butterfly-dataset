@@ -139,7 +139,7 @@ En las matrices de confusión generadas por el modelo, se puede observar una may
 
 El modelo anterior llegó a un valor de accuracy de aproximadamente 75%. Para alcanzar un valor más alto, se realizaron algunas modificaciones.
 
-La modificación más importante involucró el tamaño de la imagen. Dado que el modelo pre-entrenado fue diseñado para procesar imágenes de mayor resolución, aumentar su tamaño de 75x75 a 299x299 permitiría al modelo entrenarse en base a imágenes con un mayor nivel de detalle.
+La modificación más importante involucró el tamaño de la imagen. Dado que el modelo pre-entrenado fue diseñado para procesar imágenes de mayor resolución, aumentar su tamaño de 75x75 a 299x299 permitiría al modelo entrenarse en base a imágenes con un mayor nivel de detalle. Como se aumentó el tamaño de las imágenes (y por lo tanto, los detalles alimentados al modelo), se dedujo que únicamente se necesitan 40 epochs para entrenar el modelo correctamente.
 
 Además, se implementó la función **ReduceLROnPlateau**, la cual reduce el valor de la tasa de aprendizaje al detectar que el modelo no presenta mejoras en sus valores de accuracy tanto en entrenamiento como en validación.
 
