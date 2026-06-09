@@ -86,7 +86,7 @@ El gráfico muestra un estancamiento en valores mucho más bajos a los del set d
 #### Interpretación del modelo base
 Este modelo tiene una arquitectura muy simple, contando con únicamente 4 layers. Es por ello que la cantidad de parámetros que toma el modelo de entrenamiento no es suficiente para entrenarlo lo suficiente para reconocer con claridad el tipo de mariposa a partir de una foto. Al ser un modelo con underfitting, se puede inferir que el valor de precisión al probar el modelo será inferior a lo esperado.
 
-### Modelo mejorado
+### Iteración 2
 
 Posterior a la prueba del modelo base, se llevaron a cabo diferentes mejoras para lograr un mejor entrenamiento. Con base en los artículos científicos consultados, se tomó la decisión de implementar el modelo pre-entrenado **InceptionV3**, que es viene del modele GoogLeNet. En un artículo donde se emplearon 120 imágenes de mariposas para clasificarlas en 4 diferentes especies, se notó que el modelo CNN GoogLeNet tenía un mejor rendimiento que otros modelos pre-entrenados tales como AlexNet. Se denotó que GoogLeNet logra una alta precisión detectando patrones en las diferentes especies de hojas, logrando reconocer 36 tipos de hojas.
 
@@ -101,7 +101,7 @@ InceptionV3 tiene una arquitectura que consiste de 48 capas de profundidad. En e
 | Número de imágenes de entrenamiento | 4549 |
 | Número de imágenes de prueba | 1950 |
 | Optimizer | RMSprop |
-| Número de layers | 48 (InceptionV3) |
+| Número de layers | 52 (InceptionV3 + Capas adicionales) |
 | Número de epochs | 120 |
 
 El tamaño de las imágenes fue cambiado de 64x64 a 75x75, ya que el modelo pre-entrenado InceptionV3 exige un mínimo de 75x75 como resolución. 
@@ -115,15 +115,13 @@ Si bien en los artículos se utilizó el optimizador Adam, se notó que utilizan
 <img width="567" height="455" alt="comparison" src="https://github.com/user-attachments/assets/4db6960f-82b7-43ea-8f07-c3163ea7b72d" />
 
 
-En una de las matrices de confusión que se generaron para esta iteración se evidencia las fallas que comete el modelo al identificar las imagenes.
+En una de las matrices de confusión que se generaron para esta iteración se evidencian las fallas que comete el modelo al identificar las imagenes.
 
 <img width="654" height="606" alt="cm5" src="https://github.com/user-attachments/assets/630f9ef4-fe4f-4de3-bbe9-ab9186afe6ae" />
-
 
 Con una tasa de aprendizaje menor, el entrenamiento mostró menos valores inconsistentes en las pérdidas tanto de validación como de entrenamiento. Además, los valores de precisión en entrenamiento y validación mostraron una mayor similitud. Al probar el modelo, el valor estuvo acorde al correspondiente en entrenamiento y validación, mostrando entre todos valores finales de alrededor del 75%.
 
 <img width="567" height="455" alt="téléchargement (3)" src="https://github.com/user-attachments/assets/b17d9071-7dcf-43e2-8f75-c84beba9a628" />
-
 
 En las matrices de confusión generadas por el modelo, se puede observar una mayor precisión en la clasificación de mariposas.
 
@@ -132,6 +130,42 @@ En las matrices de confusión generadas por el modelo, se puede observar una may
 <img width="697" height="648" alt="cm3" src="https://github.com/user-attachments/assets/f64367c8-c8fe-4815-83f1-db21ed1026ab" />
 <img width="634" height="586" alt="cm4" src="https://github.com/user-attachments/assets/c4a0f024-6f92-49f8-917a-e931e5506318" />
 <img width="654" height="606" alt="cm5" src="https://github.com/user-attachments/assets/9f84d295-fb60-4ce2-9fb2-5c85a3967d6a" />
+
+### Iteración 3
+
+El modelo anterior llegó a un valor de accuracy de aproximadamente 75%. Para llegar a un valor más alto, se hicieron algunas modificaciones. 
+
+La modificación más importante involucró el tamaño de la imagen. Debido a que el modelo pre-entrenado estaba hecho para tomar en consideración imágenes de mayor tamaño, aumentar su tamaño de 75x75 a 299x299 permitiría al modelo entrenarse en base a imágenes con un mayor detalle.
+
+Además, se implementó la función **ReduceLROnPlateau**, la cual reduce el valor de la tasa de entrenamiento al notar que un modelo no avanza respecto a sus valores de accuracy tanto en entrenamiento como en validación.
+
+El último cambio fue implementar un valor de tasa de aprendizaje más alto, cambiando de 1x10^-6 a 1x10^-4. El uso de la función Reduce LR On Plateau hará modificaciones pertinentes a éste durante el entrenamiento si se detecta la necesidad.
+
+| Parámetro | Valor |
+| --------- | ----- |
+| Tasa de Aprendizaje | 1x10^-4 |
+| Input shape | 299x299x3 |
+| Batch Size | 8 |
+| Número de clases | 75 |
+| Número de imágenes de entrenamiento | 4549 |
+| Número de imágenes de prueba | 1950 |
+| Optimizer | RMSprop |
+| Número de layers | 52 (InceptionV3 + Capas adicionales) |
+| Número de epochs | 40 |
+
+Con estos cambios, el modelo llegó a una eficiencia del 80% en los valores de prueba.
+
+<img width="567" height="455" alt="acc_comparison" src="https://github.com/user-attachments/assets/c09e782e-9993-4289-b582-80e5ec123f6b" />
+
+Incluso, se muestra una mayor consistencia con los valores de LOSS tanto en entrenamiento como en validación.
+<img width="567" height="455" alt="loss_compare" src="https://github.com/user-attachments/assets/e2415da3-f802-4693-a3a4-76e5325c0404" />
+
+Las matrices de confusión muestran un menor margen de error, mostrando los siguientes datos:
+<img width="703" height="654" alt="cm1" src="https://github.com/user-attachments/assets/56954106-1f05-4385-8459-d5c5ef07e75b" />
+<img width="661" height="612" alt="cm2" src="https://github.com/user-attachments/assets/40d3db33-da64-405f-8083-3c29a29d7364" />
+<img width="697" height="648" alt="cm3" src="https://github.com/user-attachments/assets/90b48468-7af2-4b57-bd4b-021c29a1ff88" />
+<img width="634" height="586" alt="cm4" src="https://github.com/user-attachments/assets/f87125a7-1f05-466d-9a97-d5ddb99ef340" />
+<img width="654" height="606" alt="cm5" src="https://github.com/user-attachments/assets/ab86e596-f93f-4214-bcc0-99efaf2b6950" />
 
 ## Conclusiones
 
