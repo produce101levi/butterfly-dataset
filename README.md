@@ -68,7 +68,8 @@ Utiliza la fórmula de Cross Enthropy para calcular el loss en cada epoch.
 Los resultados obtenidos a partir del entrenamiento del modelo base fueron los siguientes:
 
 #### Gráfico representando la evolución del valor accuracy en el set de entrenamiento
-<img width="547" height="435" alt="téléchargement" src="https://github.com/user-attachments/assets/02452f11-3c92-4027-b932-63b50b594efe" />
+<img width="553" height="446" alt="Capture d’écran 2026-06-08 à 1 30 28 PM" src="https://github.com/user-attachments/assets/9a244d06-308c-4250-92da-8f7367e4cbb2" />
+
 
 En este gráfico se observa un claro signo de **underfitting**, en donde el porcentaje precisión del modelo se estanca en aproximadamente un 55% tras 250 iteraciones. Esto indica que, en el conjunto de datos correspondiente a las fotos de entrenamiento, alrededor del 55% de las mariposas son clasificadas correctamente. 
 
@@ -76,7 +77,8 @@ En este gráfico se observa un claro signo de **underfitting**, en donde el porc
 <img width="547" height="435" alt="téléchargement (1)" src="https://github.com/user-attachments/assets/fa408417-ad5b-4e18-8aaa-0eb6337c6096" />
 
 #### Gráfico representando la evolución del valor accuracy en el set de validación
-<img width="556" height="435" alt="téléchargement (2)" src="https://github.com/user-attachments/assets/5acd1cf0-ab39-4f2f-9d31-4d30ea9a288e" />
+<img width="559" height="445" alt="Capture d’écran 2026-06-08 à 1 30 32 PM" src="https://github.com/user-attachments/assets/edcc3145-dea0-4f99-8a4c-0c776b4c7f95" />
+
 
 El gráfico muestra un estancamiento en valores mucho más bajos a los del set de entrenamiento, quedando en alrededor del 42.5%. Tras 250 iteraciones se indica que, en el set de validaciones, únicamente el 42.5% de las mariposas (en promedio) son clasificadas correctamente.
 
