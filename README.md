@@ -195,6 +195,7 @@ El experimento muestra resultados satisfactorios y de mejora, ya que se puede ob
 
 ## Correcciones realizadas
 1.- Corregir gráficos de accuracy en iteración 1 e iteración 4 para reflejar valores del 0 al 1 en lugar de 0 a n. (Los datos en iteración 2 y 3 ya no están disponibles, por lo que las gráficos no se pudieron regenerar. En su lugar, se agregó una nota explicando que el gráfico llega únicamente a un máximo de 0.8 en el eje Y)
+
 2.- Agregar una tabla de resultados comparando accuracy en test dependiendo del modelo.
 
 ## Referencias
